@@ -1,0 +1,209 @@
+.datepicker {
+    display: flex;
+    position: relative;
+}
+.datepicker * {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Non-prefixed version, currently */  
+}
+
+.datepicker__input {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid aliceblue;
+}
+
+.datepicker__input:focus{
+    outline: none;
+}
+.datepicker__container {
+    z-index: 10;
+    float: left;
+    position: absolute;
+    left:0;
+    top: 25px;
+    width: 300px;
+    min-height: 300px;
+    color: aliceblue;
+    background-color: #fff;
+    box-shadow: 10px 10px 40px rgba(0,0,0,0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    padding: 10px 15px;
+}
+
+.datepicker__header{
+    display: flex;
+    width: 100%;
+    height: 53px;
+}
+.datepicker__body{
+    float: left;
+    width: 100%;
+}
+
+/**
+ * Controls
+ */
+
+.datepicker__header__button{
+    float: left;
+    width: 45px;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.datepicker__header__button__inner:hover{ 
+    cursor: pointer;
+    background: #eee;
+}
+.datepicker__header__button__inner {
+    display: flex;
+    justify-content: center;
+    height: 32px;
+    width: 32px;
+    color: rgba(153, 153, 153, 0.4);
+    border-radius: 100%;
+    line-height: 35px;
+    text-align: center;
+    position: absolute;
+    top:20%;
+    left:0;
+    transition: all 0.2s ease;
+}
+
+.datepicker__header__container{
+    float: left;
+    width: 120px;
+    height: 100%;
+}
+.datepicker__header__container__year{
+    float: left;
+    width: 100%;
+    height: 30px;
+    font-size: 27px;
+    color: #666;
+    font-weight: 200px;
+    text-align: center;
+}
+.datepicker__header__container__month{
+    float: left;
+    width: 100%;
+    height: 15px;
+    font-size: 13px;
+    color: #666;
+    font-weight: 200px;
+    text-align: center;
+}
+
+/**
+ *  Calendar
+ */
+.cc-month,
+.calendar__container__head,
+.calendar__container__name, 
+.calendar__container__body,
+.calendar-day-container__day span,
+.calendar-day-container__day,
+.calendar-day-container,
+.calendar__container{
+    position: relative;
+    display: block;
+    float: left;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.calendar__container{ 
+    width: 100%;
+    height: 100%;
+}
+
+.datepicker__header__container__month{ 
+    height: 30px;
+    width: 100%;
+    font-size: 16px;
+    line-height: 20px;
+    color: #666;
+}
+.calendar__container__head{ 
+    height: 30px;
+    width: 100%;
+    margin-top: 10px;
+}
+.calendar__container__name{ 
+    width: 14.285%;
+    height: 30px;
+    line-height: 30px;
+    font-weight: 700;
+    color: #666;
+    font-size: 9px;
+    text-align: center;
+}
+.calendar__container__body{ 
+    height: 200px;
+    width: 100%;
+}
+.calendar-day-container{ 
+    width: 14.285%;
+    height: 16.6666%;
+}
+.calendar-day-container__day{
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    font-weight: 300;
+    color: #444;
+    text-align: center;
+}
+.calendar-day-container__day span{ 
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    font-weight: 300;
+    color: #444;
+}
+
+.calendar-day-container__day span:hover{
+    cursor: pointer;
+    background: #eee;
+} 
+.calendar-day-container__day span{
+    width: 30px;
+    height: 30px;
+    margin-top: -15px;
+    margin-left: -15px;
+    left: 50%;
+    top: 50%;
+    font-weight: 400;
+    border-radius: 100%;
+    line-height: 30px;
+}
+.calendar-day-container.disabled{
+    pointer-events: none;
+}
+
+.calendar-day-container.disabled .calendar-day-container__day span{
+    color: #ddd;
+}
+.calendar-day-container.disabled .calendar-day-container__day span{
+    background: #fff!important;
+}
+.calendar-day-container.highlight .calendar-day-container__day span{
+    background: seashell;
+}
+.calendar-day-container.highlight-green .calendar-day-container__day span{
+    background: aliceblue;
+}
+
+@media only screen and (max-width: 700px) {
+    .datepicker__container {
+        left: -10px;
+    }
+}

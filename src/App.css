@@ -1,38 +1,126 @@
-.App {
-  text-align: center;
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+form {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+label {
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 2.5px;
+    font-size: 0.9rem;
+}
+label:nth-child(4) {
+    margin-top: 2.6rem;
 }
 
-.App-link {
-  color: #61dafb;
+.input {
+    width: 100%;
+    border-radius: 10px;
+    border: 2px solid aliceblue;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.credentials, 
+.address, 
+.department {
+    border: 2px solid aliceblue;
+    border-radius: 10px;
+    padding: 1rem 1rem;
+}
+
+.credentials {
+    margin-right: 1rem;
+}
+
+.department {
+    margin-left: 1rem;
+    padding-bottom: 2rem;
+}
+
+.link {
+    text-decoration: none;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
+    padding: 0.25rem 1rem;
+    color: black;
+    background-color: aliceblue;
+}
+
+button {
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    background-color: aliceblue;
+    border-radius: 10px;
+    border: 2px solid aliceblue;
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 900;
+    padding: 0rem 1rem;
+    border-radius: 10px;
+}
+
+.headings {
+    display: flex;
+}
+.heading {
+    font-size: 0.95rem;
+    min-width: 7.5rem;
+    font-weight: 900;
+}
+.list {
+    font-size: 0.85rem;
+    width: 100%;
+    display: flex;
+}
+.list__item {
+    min-width: 7.5rem;
+}
+.list__item p:nth-child(2n+1) {
+    background-color: aliceblue;
+}
+.list__item p {
+    padding-top: 1rem;
+    height: 2.5rem;
+}
+
+@media only screen and (max-width: 700px) {
+    .link {
+        margin-bottom: 2rem;
+    }
+    form {
+        width: 75%;
+        flex-direction: column;
+        align-items: center;
+    }
+    .credentials, 
+    .address, 
+    .department {
+        width: 100%;
+    }
+    .credentials, 
+    .address {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    .department {
+        margin-left: 0;
+    }
+    button {
+        width: 25%;
+        margin-bottom: 3rem;
+}
 }
