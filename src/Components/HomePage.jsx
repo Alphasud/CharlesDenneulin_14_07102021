@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import DatePicker from './DatePicker/DatePicker'
+import DatePicker from './DatePicker/DatePicker';
+import Dropdown from './Dropdown/Dropdown';
 
 function HomePage() {
-    
+    const departments = ['Sales', 'Marketing', 'Engineering', 'Human Ressources', 'Legal'];
+
     return ( <>
         <div className="title">
             <h1>HR.net</h1>
@@ -92,15 +94,16 @@ function HomePage() {
                 </div>
 
                 <div className="department">
-                    <label htmlFor="department">Department</label>
-                    <select name="department" id="department" defaultValue={'default'}>
+                     <label htmlFor="department">Department</label>
+                    {/*<select name="department" id="department" defaultValue={'default'}>
                     <option value="default">Select a department</option>
                     <option>Sales</option>
                     <option>Marketing</option>
                     <option>Engineering</option>
                     <option>Human Resources</option>
                     <option>Legal</option>
-                </select>
+                </select> */}
+                    <Dropdown departments={departments} />
                 </div>
                 
             </form>

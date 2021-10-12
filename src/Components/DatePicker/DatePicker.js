@@ -4,6 +4,9 @@ import './DatePicker.css';
 let oneDay = 60 * 60 * 24 * 1000;
 let todayTimestamp = Date.now() - (Date.now() % oneDay) + (new Date().getTimezoneOffset() * 1000 * 60);
 
+/* 
+    * Custom hook to manage display
+*/
 function useComponentVisible(initialIsVisible) {
   const [isComponentVisible, setIsComponentVisible] = useState(
     initialIsVisible
@@ -33,7 +36,9 @@ function useComponentVisible(initialIsVisible) {
 
   return { ref, isComponentVisible, setIsComponentVisible };
 }
-
+/* 
+    * Date Picker component
+*/
 function DatePicker() {
 
     let inputRef = useRef(null);
