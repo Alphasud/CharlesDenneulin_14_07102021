@@ -39,7 +39,7 @@ function useComponentVisible(initialIsVisible) {
 /* 
     * Date Picker component
 */
-function DatePicker() {
+function DatePicker(props) {
 
     let inputRef = useRef(null);
     const daysMap = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -122,9 +122,10 @@ function DatePicker() {
     isComponentVisible,
     setIsComponentVisible
     } = useComponentVisible(false);
-
-
-    /* User updates inside the calendar */
+    
+    /* 
+    * User updates inside the calendar 
+    */
 
     const onDateClick = (day) =>  {
         setSelectedDay(day.timestamp);
@@ -156,7 +157,9 @@ function DatePicker() {
         setMonthDetails(getMonthDetails(nyear, nmonth))
     }
 
-    /* Calendar rendering */
+    /* 
+    * Calendar rendering 
+    */
     function renderCalendar() {
         let days = monthDetails.map((day, index)=> {
             return (
@@ -183,10 +186,14 @@ function DatePicker() {
         )
     }
 
+    const handleChange = (data) => {
+        props.handleResponse(data)
+    }
+
     return (
         <div className='datepicker'>
                 <div ref={ref} onClick = {() => setIsComponentVisible(true)}>
-                <input className='datepicker__input' type='text' value={date.toLocaleDateString()} readOnly /* onChange={() => updateDateFromInput} */ ref={inputRef}/>
+                <input className='datepicker__input' type='text' value={date.toLocaleDateString()} readOnly onChange={handleChange(date)} ref={inputRef}/>
                 </div>
                 {isComponentVisible ? (
                 <div ref={ref} className='datepicker__container'>

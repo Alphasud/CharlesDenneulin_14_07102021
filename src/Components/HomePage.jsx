@@ -1,9 +1,88 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DatePicker from './DatePicker/DatePicker';
 import Dropdown from './Dropdown/Dropdown';
+import Modal from './Modal/Modal';
+import db from '../firebaseConfig';
 
 function HomePage() {
     const departments = ['Sales', 'Marketing', 'Engineering', 'Human Ressources', 'Legal'];
+    const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Federated States of Micronesia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+    
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [birthDate, setBirthDate] = useState();
+    const [startDate, setStartDate] = useState();
+    const [street, setStreet] = useState('');
+    const [city, setCity] = useState('');
+    const [state, setState] = useState('');
+    const [zip, setZip] = useState('');
+    const [department, setDepartment] = useState('');
+
+    const [resetBirth, setResetBirth] = useState(Math.random());
+    const [resetStart, setResetstart] = useState(Math.random());
+    const [reset, setReset] = useState(false);
+    const [error, setError] = useState(false);
+    const [success, setSuccess] = useState(false);
+
+    const handleStateResponse = (data) => {
+        setState(data)
+    }
+    const handleDepartmentResponse = (data) => {
+        setDepartment(data)
+    }
+    const handleBirthDateResponse = (data) => {
+        setBirthDate(data)
+    }
+    const handleStartDateResponse = (data) => {
+        setStartDate(data)
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log('Submit');
+        const user = {
+            firstName: firstName,
+            lastName: lastName,
+            birthDate: birthDate,
+            startDate: startDate,
+            street: street,
+            city: city,
+            state: state,
+            zip: zip,
+            department: department
+        }
+        console.log(user);
+        try {
+            console.log('Succes!');
+            db.collection('employee').add({
+            firstName: firstName,
+            lastName: lastName,
+            birthDate: birthDate,
+            startDate: startDate,
+            street: street,
+            city: city,
+            state: state,
+            zip: zip,
+            department: department
+            });
+            setSuccess(true);
+        } catch(error) {
+            console.log('Error sending datas');
+            setError(true);
+        }
+        
+
+        setResetBirth(Math.random());
+        setResetstart(Math.random());
+        setReset(!reset);
+        setFirstName('');
+        setLastName('');
+        setStreet('');
+        setCity('');
+        setZip(0);
+
+    }
 
     return ( <>
         <div className="title">
@@ -12,104 +91,43 @@ function HomePage() {
         <div className="container">
             <Link className="link" to='/employeeList'>View Current Employees</Link>
             <h2>Create Employee</h2>
-            <form action="#" id="create-employee">
+            <form>
                 <div className="credentials">
                     <label htmlFor="first-name">First Name</label>
-                    <input className='input' type="text" id="first-name" />
+                    <input className='input' type="text" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
 
                     <label htmlFor="last-name">Last Name</label>
-                    <input className='input' type="text" id="last-name" />
+                    <input className='input' type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} />
 
                     <label htmlFor="date-of-birth">Date of Birth</label>
-                    <DatePicker />
+                    <DatePicker handleResponse={handleBirthDateResponse} key={resetBirth}/>
                     
                     <label htmlFor="start-date">Start Date</label>
-                    <DatePicker />
+                    <DatePicker handleResponse={handleStartDateResponse} key={resetStart}/>
                 </div>
                 <div className="address">
                     <label htmlFor="street">Street</label>
-                    <input className='input' id="street" type="text" />
+                    <input className='input' type="text" value={street} onChange={(event) => setStreet(event.target.value)} />
 
                     <label htmlFor="city">City</label>
-                    <input className='input' id="city" type="text" />
+                    <input className='input' type="text" value={city} onChange={(event) => setCity(event.target.value)} />
 
                     <label htmlFor="state">State</label>
-                    <select name="state" id="state" defaultValue={'default'}>
-                        <option value="default">Select a State</option>
-                        <option value="AL">Alabama</option>
-                        <option value="AK">Alaska</option>
-                        <option value="AZ">Arizona</option>
-                        <option value="AR">Arkansas</option>
-                        <option value="CA">California</option>
-                        <option value="CO">Colorado</option>
-                        <option value="CT">Connecticut</option>
-                        <option value="DE">Delaware</option>
-                        <option value="DC">District Of Columbia</option>
-                        <option value="FL">Florida</option>
-                        <option value="GA">Georgia</option>
-                        <option value="HI">Hawaii</option>
-                        <option value="ID">Idaho</option>
-                        <option value="IL">Illinois</option>
-                        <option value="IN">Indiana</option>
-                        <option value="IA">Iowa</option>
-                        <option value="KS">Kansas</option>
-                        <option value="KY">Kentucky</option>
-                        <option value="LA">Louisiana</option>
-                        <option value="ME">Maine</option>
-                        <option value="MD">Maryland</option>
-                        <option value="MA">Massachusetts</option>
-                        <option value="MI">Michigan</option>
-                        <option value="MN">Minnesota</option>
-                        <option value="MS">Mississippi</option>
-                        <option value="MO">Missouri</option>
-                        <option value="MT">Montana</option>
-                        <option value="NE">Nebraska</option>
-                        <option value="NV">Nevada</option>
-                        <option value="NH">New Hampshire</option>
-                        <option value="NJ">New Jersey</option>
-                        <option value="NM">New Mexico</option>
-                        <option value="NY">New York</option>
-                        <option value="NC">North Carolina</option>
-                        <option value="ND">North Dakota</option>
-                        <option value="OH">Ohio</option>
-                        <option value="OK">Oklahoma</option>
-                        <option value="OR">Oregon</option>
-                        <option value="PA">Pennsylvania</option>
-                        <option value="RI">Rhode Island</option>
-                        <option value="SC">South Carolina</option>
-                        <option value="SD">South Dakota</option>
-                        <option value="TN">Tennessee</option>
-                        <option value="TX">Texas</option>
-                        <option value="UT">Utah</option>
-                        <option value="VT">Vermont</option>
-                        <option value="VA">Virginia</option>
-                        <option value="WA">Washington</option>
-                        <option value="WV">West Virginia</option>
-                        <option value="WI">Wisconsin</option>
-                        <option value="WY">Wyoming</option>
-                    </select>
+                    <Dropdown reset={reset} data={states} name='state' handleResponse={handleStateResponse} />
 
                     <label htmlFor="zip-code">Zip Code</label>
-                    <input className='input' id="zip-code" type="number" />
+                    <input className='input' type="number" value={zip} onChange={(event) => setZip(event.target.value)} />
                 </div>
 
                 <div className="department">
                      <label htmlFor="department">Department</label>
-                    {/*<select name="department" id="department" defaultValue={'default'}>
-                    <option value="default">Select a department</option>
-                    <option>Sales</option>
-                    <option>Marketing</option>
-                    <option>Engineering</option>
-                    <option>Human Resources</option>
-                    <option>Legal</option>
-                </select> */}
-                    <Dropdown departments={departments} />
+                    <Dropdown reset={reset} data={departments} name='department' handleResponse={handleDepartmentResponse}/>
                 </div>
-                
             </form>
-            
-            <button>Save</button>
+            <button onClick={handleSubmit}>Save</button>
         </div>
+        {success ? <Modal message='Success! You added a new employee!' /> : ''}
+        {error ? <Modal message='Ooops, something went wrong...' /> : ''}
     </>
   );
 }

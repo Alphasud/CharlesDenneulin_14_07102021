@@ -13,31 +13,45 @@
     display: flex;
     align-items: center;
     justify-content:space-between;
-    height: 1.2rem;
+    height: 1rem;
     padding: 0.25rem 0.5rem;
 }
 .dropdown__title h1 {
     font-size: 0.85rem;
     font-weight: 500;
     margin-right: 0.5rem;
+    margin-top: 0.8rem;
 }
 .dropdown__title svg {
     width: 1rem;
+    margin-top: 0.4rem;
 }
 .dropdown {
-    height: 0;
+    min-height: 0;
+    max-height: 0;
+    padding: 0 0 0.25rem 0;
     transform: scaleY(0);
     transform-origin: top;
     transition: transform .15s ease-in-out;
+    overflow: auto;
 }
-.dropdown__list-container {
+.dropdown__container__list{
     padding: 0 0 1rem 0;
 }
 .dropdown__container__list__item {
     font-size: 0.85rem;
     margin: 0.5rem 0 0.5rem 0.5rem;
+    padding: 0.2rem;
+    transition: all 0.2s ease;
+}
+.dropdown__container__list__item:hover {
+    background-color: aliceblue;
+    color: tomato;
+    border-radius: 10px;
 }
 .visible {
-    height: auto;
+    min-height: 0;
+    max-height: 25rem;
     transform: scaleY(1);
+    transition: transform .15s ease-in-out;
 }

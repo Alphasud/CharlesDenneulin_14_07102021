@@ -1,3 +1,9 @@
+.App {
+    width: 100vw;
+    height: 100vh;
+    background-color:tomato;
+    color: aliceblue;
+}
 .title {
     display: flex;
     align-items: center;
@@ -23,12 +29,17 @@ label {
     margin-top: 1rem;
     margin-bottom: 2.5px;
     font-size: 0.9rem;
+    font-weight: 900;
 }
 label:nth-child(4) {
     margin-top: 2.6rem;
 }
 
 .input {
+    background-color: tomato;
+    color: aliceblue;
+    font-weight: 900;
+    padding-left: 0.25rem;
     width: 100%;
     border-radius: 10px;
     border: 2px solid aliceblue;
@@ -50,6 +61,12 @@ label:nth-child(4) {
 .department {
     margin-left: 1rem;
     padding-bottom: 2rem;
+    max-height: 15rem;
+}
+
+.credentials, 
+.address {
+    min-height: 16rem;
 }
 
 .link {
@@ -57,7 +74,8 @@ label:nth-child(4) {
     border: 2px solid aliceblue;
     border-radius: 10px;
     padding: 0.25rem 1rem;
-    color: black;
+    color: tomato;
+    font-weight: 500;
     background-color: aliceblue;
 }
 
@@ -66,6 +84,7 @@ button {
     font-family: 'Quicksand', sans-serif;
     background-color: aliceblue;
     border-radius: 10px;
+    color: tomato;
     border: 2px solid aliceblue;
     margin-top: 2rem;
     font-size: 1.5rem;
@@ -74,30 +93,87 @@ button {
     border-radius: 10px;
 }
 
-.headings {
+/* EMPLOYEE LIST */
+.employee-page {
+    overflow: hidden;
+}
+.employee-container {
+    overflow:auto;
+    width: 100%;
+    padding: 0.5rem 1rem;
     display: flex;
+    flex-direction: column;
+}
+.headings-container {
+    width:fit-content;
+    display: flex;
+    justify-content: center;
 }
 .heading {
+    padding: 0.5rem 0;
     font-size: 0.95rem;
     min-width: 7.5rem;
     font-weight: 900;
+    border-top: 2px solid aliceblue;
+    border-bottom: 2px solid aliceblue;
 }
-.list {
-    font-size: 0.85rem;
-    width: 100%;
+.heading:first-child{
+    padding-left: 0.25rem;
+    border-left: 2px solid aliceblue;
+    border-top-left-radius: 10px;
+}
+.heading:last-child{
+    min-width: 5rem;
+    border-right: 2px solid aliceblue;
+    border-top-right-radius: 10px;
+}
+.list__employees {
+    width:fit-content;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-.list__item {
-    min-width: 7.5rem;
-}
-.list__item p:nth-child(2n+1) {
+.list__employees div:nth-child(2n+1) {
     background-color: aliceblue;
+    color: tomato;
 }
-.list__item p {
-    padding-top: 1rem;
-    height: 2.5rem;
+.list__employee {
+    display: flex;
+    border: 2px solid aliceblue;
 }
-
+.list__employee:last-child {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.list__employee p {
+    font-size: 0.85rem;
+    min-width: 7.5rem;
+    height: 1rem;
+}
+.list__employee p:first-child{
+    padding-left: 0.25rem;
+}
+.list__employee p:last-child{
+    min-width: 5rem;
+}
+.employee__link {
+    display: block;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid aliceblue;
+    border-radius: 10px;
+    color: aliceblue;
+    font-size: 1.2rem;
+    font-weight: 900;
+    width: 12rem;
+    padding: 0.5rem 0;
+    margin: 1rem auto;
+}
+.error {
+    display: flex;
+    justify-content: center;
+}
 @media only screen and (max-width: 700px) {
     .link {
         margin-bottom: 2rem;
@@ -125,3 +201,4 @@ button {
         margin-bottom: 3rem;
 }
 }
+
