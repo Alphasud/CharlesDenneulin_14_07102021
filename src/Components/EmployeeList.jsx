@@ -1,24 +1,54 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import db from '../firebaseConfig';
+import Modal from './Modal/Modal';
 
 function EmployeeList() {
     
     const [employees, setEmployees] = useState([]);
     const [error, setError] = useState(false);
+    const [employeeDeleted, setEmployeeDeleted] = useState(false);
+    const [deleteMessage, setDeleteMessage] = useState('');
 
-    useEffect(() => {
-        const fetchData = async () => {
+    const fetchData = async () => {
+            let employeeArray = [];
             try {
                 const data = await db.collection('employee').get();
-                setEmployees(data.docs.map(el => el.data()));
+                data.docs.map(el => {
+                    let employee = { ...el.data(), 'id': el.id}
+                    employeeArray.push(employee)
+                    return employeeArray
+                })
+                setEmployees(employeeArray);
             } catch (e) {
                 setError(true);
             } 
         }
+
+    useEffect(() => {
         fetchData();
     }, []);
-    
+
+    const handleDelete = (id, firstName) => {
+        console.log(`Delete user with id: ${id}`);
+        try {
+            db.collection('employee').doc(id).delete();
+            //fetchData();
+            setEmployeeDeleted(true);
+            setDeleteMessage(`Gotcha! ${firstName} is no longer in the team ;)`);
+        } catch (error) {
+            console.log('Error deleting employee');
+            console.log(error);
+        }
+    }
+    const handleModalResponse = (data) => {
+        if (data === 'click') {
+            setEmployeeDeleted(false);
+            setDeleteMessage('');
+            fetchData();
+        }
+    }
+
     return (
         <div className = 'employee-page'>
         <h1 className='title'>Current Employees</h1>
@@ -35,10 +65,11 @@ function EmployeeList() {
                 <div className='heading'>City</div>
                 <div className='heading'>State</div>
                 <div className='heading'>Zip Code</div>
+                <div className='heading'>Action</div>
             </div>
             <div className='list__employees'>
                 {employees.map(el => {
-                    return <div key={Math.random()} className='list__employee'>
+                    return <div key={el.id} className='list__employee'>
                         <p key={Math.random()}>{el.firstName}</p>
                         <p key={Math.random()}>{el.lastName}</p>
                         <p key={Math.random()}>{new Date(el.startDate.seconds*1000).toDateString()}</p>
@@ -48,10 +79,12 @@ function EmployeeList() {
                         <p key={Math.random()}>{el.city}</p>
                         <p key={Math.random()}>{el.state}</p>
                         <p key={Math.random()}>{el.zip}</p>
+                        <span className='delete'><i className="fas fa-pen-alt"></i><i onClick={() => handleDelete(el.id, el.firstName)} className="fas fa-trash"></i></span>
                     </div>
                 })}
-            </div>
-        </div> : <div className='error'><h3>Oooops, something went wrong with the data fetching...</h3></div>}
+                    </div>
+        {employeeDeleted ? <Modal message={deleteMessage} handleResponse={handleModalResponse} /> : ''}
+        </div> : <div className='error'><h3>Oooops, something went wrong when fetching datas...</h3></div>}
         </div>
             
     );

@@ -24,6 +24,7 @@ function HomePage() {
     const [reset, setReset] = useState(false);
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [addEmployeeMessage, setAddEmployeeMessage] = useState('');
 
     const handleStateResponse = (data) => {
         setState(data)
@@ -37,24 +38,14 @@ function HomePage() {
     const handleStartDateResponse = (data) => {
         setStartDate(data)
     }
+    const handleModalResponse = (data) => {
+        setSuccess(false);
+        setAddEmployeeMessage('');
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Submit');
-        const user = {
-            firstName: firstName,
-            lastName: lastName,
-            birthDate: birthDate,
-            startDate: startDate,
-            street: street,
-            city: city,
-            state: state,
-            zip: zip,
-            department: department
-        }
-        console.log(user);
         try {
-            console.log('Succes!');
             db.collection('employee').add({
             firstName: firstName,
             lastName: lastName,
@@ -67,12 +58,11 @@ function HomePage() {
             department: department
             });
             setSuccess(true);
+            setAddEmployeeMessage(`Success! ${firstName} is now part of our team :)`);
         } catch(error) {
-            console.log('Error sending datas');
             setError(true);
         }
         
-
         setResetBirth(Math.random());
         setResetstart(Math.random());
         setReset(!reset);
@@ -126,7 +116,7 @@ function HomePage() {
             </form>
             <button onClick={handleSubmit}>Save</button>
         </div>
-        {success ? <Modal message='Success! You added a new employee!' /> : ''}
+        {success ? <Modal message={addEmployeeMessage} handleResponse={handleModalResponse} /> : ''}
         {error ? <Modal message='Ooops, something went wrong...' /> : ''}
     </>
   );
