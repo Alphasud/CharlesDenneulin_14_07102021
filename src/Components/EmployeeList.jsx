@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
+import { React, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import db from '../firebaseConfig';
-import Modal from './Modal/Modal';
+import { Modal } from 'modal-cd';
 
 function EmployeeList() {
     
     const [employees, setEmployees] = useState([]);
     const [error, setError] = useState(false);
-    const [employeeDeleted, setEmployeeDeleted] = useState(false);
     const [deleteMessage, setDeleteMessage] = useState('');
+
+    const [isVisible, setIsVisibile] = useState(false);
 
     const fetchData = async () => {
             let employeeArray = [];
@@ -33,8 +34,7 @@ function EmployeeList() {
         console.log(`Delete user with id: ${id}`);
         try {
             db.collection('employee').doc(id).delete();
-            //fetchData();
-            setEmployeeDeleted(true);
+            setIsVisibile(true);
             setDeleteMessage(`Gotcha! ${firstName} is no longer in the team ;)`);
         } catch (error) {
             console.log('Error deleting employee');
@@ -42,8 +42,8 @@ function EmployeeList() {
         }
     }
     const handleModalResponse = (data) => {
-        if (data === 'click') {
-            setEmployeeDeleted(false);
+        if (data) {
+            setIsVisibile(false);
             setDeleteMessage('');
             fetchData();
         }
@@ -83,7 +83,7 @@ function EmployeeList() {
                     </div>
                 })}
                     </div>
-        {employeeDeleted ? <Modal message={deleteMessage} handleResponse={handleModalResponse} /> : ''}
+        <Modal visible={isVisible} message={deleteMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse}/>
         </div> : <div className='error'><h3>Oooops, something went wrong when fetching datas...</h3></div>}
         </div>
             

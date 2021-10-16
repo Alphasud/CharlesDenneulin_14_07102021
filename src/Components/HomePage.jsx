@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DatePicker from './DatePicker/DatePicker';
 import Dropdown from './Dropdown/Dropdown';
-import Modal from './Modal/Modal';
 import db from '../firebaseConfig';
+import { Modal } from 'modal-cd';
 
 function HomePage() {
     const departments = ['Sales', 'Marketing', 'Engineering', 'Human Ressources', 'Legal'];
@@ -26,6 +26,8 @@ function HomePage() {
     const [success, setSuccess] = useState(false);
     const [addEmployeeMessage, setAddEmployeeMessage] = useState('');
 
+    const [isVisible, setIsVisibile] = useState(false);
+
     const handleStateResponse = (data) => {
         setState(data)
     }
@@ -39,8 +41,10 @@ function HomePage() {
         setStartDate(data)
     }
     const handleModalResponse = (data) => {
-        setSuccess(false);
-        setAddEmployeeMessage('');
+        if (data) {
+            setIsVisibile(false);
+            setAddEmployeeMessage('');
+        }
     }
 
     const handleSubmit = (e) => {
@@ -57,7 +61,7 @@ function HomePage() {
             zip: zip,
             department: department
             });
-            setSuccess(true);
+            setIsVisibile(true);
             setAddEmployeeMessage(`Success! ${firstName} is now part of our team :)`);
         } catch(error) {
             setError(true);
@@ -114,10 +118,10 @@ function HomePage() {
                     <Dropdown reset={reset} data={departments} name='department' handleResponse={handleDepartmentResponse}/>
                 </div>
             </form>
-            <button onClick={handleSubmit}>Save</button>
+            <button onClick={handleSubmit}>Add Employee</button>
         </div>
-        {success ? <Modal message={addEmployeeMessage} handleResponse={handleModalResponse} /> : ''}
-        {error ? <Modal message='Ooops, something went wrong...' /> : ''}
+        <Modal visible={isVisible} message={addEmployeeMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse} />
+        {error ? <Modal visible={true} message='Ooops, something went wrong...' buttonMessage='OKAY...' handleResponse={handleModalResponse} /> : ''}
     </>
   );
 }
