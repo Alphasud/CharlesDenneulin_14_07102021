@@ -8,8 +8,18 @@ function EmployeeList() {
     const [employees, setEmployees] = useState([]);
     const [error, setError] = useState(false);
     const [deleteMessage, setDeleteMessage] = useState('');
-
     const [isVisible, setIsVisibile] = useState(false);
+    const [sortType, setSortType] = useState('');
+
+    const [isFirstNameClicked, setIsFirstNameClicked] = useState(false);
+    const [isLastNameClicked, setIsLastNameClicked] = useState(false);
+    const [isBirthDateClicked, setIsBirthDateClickedClicked] = useState(false);
+    const [isStartDateClicked, setIsStartDateClicked] = useState(false);
+    const [isStreetClicked, setIsStreetClicked] = useState(false);
+    const [isCityClicked, setIsCityClicked] = useState(false);
+    const [isStateClicked, setIsStateClicked] = useState(false);
+    const [isZipClicked, setIsZipClicked] = useState(false);
+    const [isDepartmentClicked, setIsDepartmentClicked] = useState(false);
 
     const fetchData = async () => {
             let employeeArray = [];
@@ -30,6 +40,26 @@ function EmployeeList() {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        const sortArray = (type) => {
+            const types = {
+                firstName: 'firstName',
+                lastName: 'lastName',
+                birthDate: 'birthDate',
+                startDate: 'startDates',
+                street: 'street',
+                city: 'city',
+                state: 'state',
+                zip: 'zip',
+                department: 'department'
+            }
+            const sortProperty = types[type];
+            const sorted = [...employees].sort((a, b) => a[sortProperty] > b[sortProperty]);
+            setEmployees(sorted);
+        };
+        sortArray(sortType)
+    }, [sortType]);
+
     const handleDelete = (id, firstName) => {
         console.log(`Delete user with id: ${id}`);
         try {
@@ -48,7 +78,7 @@ function EmployeeList() {
             fetchData();
         }
     }
-
+    
     return (
         <div className = 'employee-page'>
         <h1 className='title'>Current Employees</h1>
@@ -56,15 +86,15 @@ function EmployeeList() {
         { !error ? 
         <div className='employee-container'>
             <div className='headings-container'>
-                <div className='heading'>First Name</div>
-                <div className='heading'>Last Name</div>
-                <div className='heading'>Start Date</div>
-                <div className='heading'>Department</div>
-                <div className='heading'>Date of Birth</div>
-                <div className='heading'>Street</div>
-                <div className='heading'>City</div>
-                <div className='heading'>State</div>
-                <div className='heading'>Zip Code</div>
+                        <div className='heading'>First Name <i class={!isFirstNameClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsFirstNameClicked(!isFirstNameClicked); setSortType('firstName')}}></i></div>
+                <div className='heading'>Last Name <i class="fas fa-chevron-up" onClick={() => setSortType('lastName')}></i></div>
+                <div className='heading'>Start Date <i class="fas fa-chevron-up"></i></div>
+                <div className='heading'>Department <i class="fas fa-chevron-up"></i></div>
+                <div className='heading'>Date of Birth <i class="fas fa-chevron-up"></i></div>
+                <div className='heading'>Street <i class="fas fa-chevron-up"></i></div>
+                <div className='heading'>City <i class="fas fa-chevron-up"></i></div>
+                <div className='heading'>State <i class="fas fa-chevron-up"></i></div>
+                <div className='heading'>Zip Code <i class="fas fa-chevron-up"></i></div>
                 <div className='heading'>Action</div>
             </div>
             <div className='list__employees'>

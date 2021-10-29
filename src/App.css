@@ -1,7 +1,6 @@
 .App {
     width: 100vw;
-    height: 100vh;
-    background-color:tomato;
+    height: 100%;
     color: aliceblue;
 }
 .title {
@@ -31,9 +30,9 @@ label {
     font-size: 0.9rem;
     font-weight: 900;
 }
-label:nth-child(4) {
+/* label:nth-child(4) {
     margin-top: 2.6rem;
-}
+} */
 
 .input {
     background-color: tomato;
@@ -185,6 +184,13 @@ button {
 .error {
     display: flex;
     justify-content: center;
+}
+.form-error {
+    position: absolute;
+    font-size: 0.8rem;
+    color: #ffff00;
+    font-weight: 500;
+    padding: 1px 0;
 }
 @media only screen and (max-width: 700px) {
     .link {
