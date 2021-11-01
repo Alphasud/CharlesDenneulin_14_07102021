@@ -4,6 +4,7 @@ import db from '../firebaseConfig';
 import { Modal } from 'modal-cd';
 
 function EmployeeList() {
+    const [entriesSelected, setEntriesSelected] = useState(10);
     const [fullArray, setFullArray] = useState([]);
     const [employees, setEmployees] = useState([]);
     const [error, setError] = useState(false);
@@ -20,6 +21,19 @@ function EmployeeList() {
     const [isZipClicked, setIsZipClicked] = useState(false);
     const [isDepartmentClicked, setIsDepartmentClicked] = useState(false);
 
+    const [numberOfPages, setNumberOfPages] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+
+
+    const createGroups = (arr, entries) => {
+        const pages = Math.ceil(arr.length / entries);
+        const perGroup = Math.ceil(arr.length / pages);
+        setNumberOfPages(pages);
+        return new Array(pages)
+        .fill('')
+        .map((_, i) => arr.slice(i * perGroup, (i + 1) * perGroup));
+    }
+
     const fetchData = async () => {
             let employeeArray = [];
             try {
@@ -29,41 +43,41 @@ function EmployeeList() {
                     employeeArray.push(employee)
                     return employeeArray
                 })
-                setEmployees(employeeArray);
                 setFullArray(employeeArray);
+                setEmployees(createGroups(employeeArray, entriesSelected));
             } catch (e) {
                 setError(true);
             } 
-        }
-
+    }
+    
     useEffect(() => {
         fetchData();
-    }, []);
+        setEmployees(createGroups(fullArray, entriesSelected));
+    }, [entriesSelected] );
 
     const sortArray = (name, type) => {
         if (type === 'ascending') {
-            const sorted = [...employees].sort((a, b) => a[name] > b[name]);
-            setEmployees(sorted);
+            const sorted = [...fullArray].sort((a, b) => a[name] > b[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
         }
         if (type === 'descending') {
-            const sorted = [...employees].sort((a, b) => a[name] < b[name]);
-            setEmployees(sorted);
+            const sorted = [...fullArray].sort((a, b) => a[name] < b[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
         }
         if (type === 'number-ascending') {
-            const sorted = [...employees].sort((a, b) => a[name] - b[name]);
-            setEmployees(sorted);
+            const sorted = [...fullArray].sort((a, b) => a[name] - b[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
         }
         if (type === 'number-descending') {
-            const sorted = [...employees].sort((a, b) => b[name] - a[name]);
-            setEmployees(sorted);
+            const sorted = [...fullArray].sort((a, b) => b[name] - a[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
         }
     }
 
     const handleSearch = (e) => {
-        setEmployees(fullArray)
-
+        setEmployees(createGroups(fullArray, entriesSelected))
         const arrayOfEmployees = fullArray;
-
+        
         const searchedFirstName = [...arrayOfEmployees].filter(el => {
             return el.firstName.toLowerCase().includes(e.target.value.toLowerCase());
         });
@@ -96,10 +110,10 @@ function EmployeeList() {
             ];
         
         const searchedWithoutDuplicate = [...new Set(searched)];
-        setEmployees(searchedWithoutDuplicate);
-        
+        setEmployees(createGroups(searchedWithoutDuplicate, entriesSelected))
+
         if (!e.target.value) {
-            setEmployees(fullArray);
+            setEmployees(createGroups(fullArray, entriesSelected))
         }
     }
 
@@ -121,15 +135,39 @@ function EmployeeList() {
             fetchData();
         }
     }
-    
+
+    const handlePreviousPage = () => {
+        let page = currentPage - 1;
+        if (page < 1) page = 1;
+        setCurrentPage(page);
+    }
+    const handleNextPage = () => {
+        let page = currentPage + 1;
+        if (page > numberOfPages) page = numberOfPages;
+        setCurrentPage(page);
+    }
+
     return (
-        <div className ='employee-page'>
+        <div className='employee-page'>
+        <div className='employee-page__container'>
         <h1 className='title'>Current Employees</h1>
         <Link className="employee__link" to='/'>Add Employee</Link>
         <div className='employee__search'>
-            <label htmlFor="search">Search</label>
+            <label htmlFor="search">Search :</label>
                 <input name='search' type="text" onInput={(e) => handleSearch(e)}/>
-        </div>
+            </div>
+            <div className="entries">
+                <p>Entries per page : </p>
+                <span className={entriesSelected === 10 ? 'selected': ''} onClick={() => setEntriesSelected(10)}>10</span>
+                <span className={entriesSelected === 25 ? 'selected': ''} onClick={() => setEntriesSelected(25)}>25</span>
+                <span className={entriesSelected === 50 ? 'selected': ''} onClick={() => setEntriesSelected(50)}>50</span>
+                <span className={entriesSelected === 100 ? 'selected': ''} onClick={() => setEntriesSelected(100)}>100</span>
+            </div>
+            <p className='entry-message'>Showing page {currentPage} of {numberOfPages} page(s) for a total of {fullArray.length} entries.</p>
+        {numberOfPages > 1 ? <div className="page-selector">
+            <span onClick={handlePreviousPage}><i className="fas fa-chevron-left"></i>Previous</span>
+            <span onClick={handleNextPage}>Next<i className="fas fa-chevron-right"></i></span>
+        </div> : null}
         { !error ? 
         <div className='employee-container'>
             <div className='headings-container'>
@@ -144,24 +182,29 @@ function EmployeeList() {
                 <div className='heading'>Zip Code <i className={!isZipClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsZipClicked(!isZipClicked); !isZipClicked ? sortArray('zip', 'number-ascending') : sortArray('zip', 'number-descending')}}></i></div>
                 <div className='heading'>Action</div>
             </div>
-            <div className='list__employees'>
-                {employees.map(el => {
-                    return <div key={el.id} className='list__employee'>
-                        <p key={Math.random()}>{el.firstName}</p>
-                        <p key={Math.random()}>{el.lastName}</p>
-                        <p key={Math.random()}>{new Date(el.startDate.seconds*1000).toDateString()}</p>
-                        <p key={Math.random()}>{el.department}</p>
-                        <p key={Math.random()}>{new Date(el.birthDate.seconds*1000).toDateString()}</p>
-                        <p key={Math.random()}>{el.street}</p>
-                        <p key={Math.random()}>{el.city}</p>
-                        <p key={Math.random()}>{el.state}</p>
-                        <p key={Math.random()}>{el.zip}</p>
-                        <span className='delete'><i className="fas fa-pen-alt"></i><i onClick={() => handleDelete(el.id, el.firstName)} className="fas fa-trash"></i></span>
-                    </div>
-                })}
-                    </div>
+        <div className='page'>
+            {employees.map((el, index) => {
+               return <div key={Math.random()} className={index + 1 === currentPage ? 'list__employees shown' : 'list__employees'}>
+                   {el.map(ele => {
+                    return <div key={ele.id} className='list__employee'>
+                    <p key={Math.random()}>{ele.firstName}</p>
+                    <p key={Math.random()}>{ele.lastName}</p>
+                    <p key={Math.random()}>{new Date(ele.startDate.seconds*1000).toDateString()}</p>
+                    <p key={Math.random()}>{ele.department}</p>
+                    <p key={Math.random()}>{new Date(ele.birthDate.seconds*1000).toDateString()}</p>
+                    <p key={Math.random()}>{ele.street}</p>
+                    <p key={Math.random()}>{ele.city}</p>
+                    <p key={Math.random()}>{ele.state}</p>
+                    <p key={Math.random()}>{ele.zip}</p>
+                    <span className='delete'><i className="fas fa-pen-alt"></i><i onClick={() => handleDelete(el.id, el.firstName)} className="fas fa-trash"></i></span>
+                </div>
+                   })}
+                </div>
+            })}
+        </div>       
         <Modal visible={isVisible} message={deleteMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse}/>
         </div> : <div className='error'><h3>Oooops, something went wrong when fetching datas...</h3></div>}
+        </div>
         </div>
             
     );

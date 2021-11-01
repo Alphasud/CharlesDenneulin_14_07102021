@@ -1,6 +1,9 @@
+body {
+    min-height: 100%;
+}
 .App {
-    width: 100vw;
-    height: 100%;
+    width: 100%;
+    min-height: 100%;
     color: aliceblue;
 }
 .title {
@@ -8,21 +11,17 @@
     align-items: center;
     justify-content: center;
 }
-
-
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
-
 form {
     display: flex;
     justify-content: space-around;
     align-items: flex-start;
 }
-
 label {
     display: block;
     margin-top: 1rem;
@@ -30,10 +29,6 @@ label {
     font-size: 0.9rem;
     font-weight: 900;
 }
-/* label:nth-child(4) {
-    margin-top: 2.6rem;
-} */
-
 .input {
     background-color: tomato;
     color: aliceblue;
@@ -94,15 +89,19 @@ button {
 
 /* EMPLOYEE LIST */
 .employee-page {
-    overflow: hidden;
+    display: flex;
+    justify-content: center;
+}
+employee-page__container {
+    width: 75rem;
 }
 .employee__search {
     display: flex;
     align-items: baseline;
-    justify-content: center;
+    justify-content: flex-start;
     margin-right: 3.5rem;
-    margin-bottom: 2rem;
     height: 2rem;
+    margin-left: 1rem;
 }
 .employee__search label {
     margin: 0;
@@ -111,22 +110,39 @@ button {
     font-weight: 900;
 }
 .employee__search input {
-    border-radius: 5px;
+    border-radius: 15px;
     border: none;
     margin-left: 1rem;
     height: 100%;
     font-size: 1rem;
-    color: tomato;
+    background-color: tomato;
+    color: #fff;
+    border: 2px solid #fff;
     font-weight: 500;
     padding-left: 0.5rem;
     outline: #fff;
 }
+.entries {
+    font-weight: 900;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 20rem;
+}
+.entries span {
+    cursor: pointer;
+}
+.entry-message {
+    margin: 0 0 0 1rem;
+    font-size: 0.8rem;
+}
 .employee-container {
-    overflow:auto;
+    /* overflow:auto; */
     padding: 0.5rem 1rem;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
 }
 .headings-container {
     width:fit-content;
@@ -134,6 +150,7 @@ button {
     justify-content: center;
 }
 .heading {
+    cursor: pointer;
     padding: 0.5rem 0;
     font-size: 0.95rem;
     min-width: 7.5rem;
@@ -151,7 +168,20 @@ button {
     border-right: 2px solid aliceblue;
     border-top-right-radius: 10px;
 }
+.page {
+    position: relative;
+    min-height: 30rem;
+}
 .list__employees {
+    visibility: hidden;
+}
+.shown {
+    visibility: visible;
+}
+.list__employees {
+    position: absolute;
+    top: 0;
+    left: 0;
     width:fit-content;
     display: flex;
     flex-direction: column;
@@ -194,20 +224,17 @@ button {
     
 }
 .employee__link {
-    position: absolute;
-    top: 0;
-    left: 3rem;
     display: block;
     text-align: center;
     text-decoration: none;
     border: 2px solid aliceblue;
-    border-radius: 10px;
+    border-radius: 15px;
     color: aliceblue;
     font-size: 1.2rem;
     font-weight: 900;
     width: 12rem;
     padding: 0.5rem 0;
-    margin: 1rem auto;
+    margin: 0 0 1rem 1rem;
 }
 .error {
     display: flex;
@@ -220,6 +247,23 @@ button {
     font-weight: 500;
     padding: 1px 0;
 }
+.selected {
+    border: 2px solid #fff;
+    border-radius: 20px;
+    padding: 0 2.5px;
+}
+.page-selector {
+    display: flex;
+    justify-content: space-between;
+    width: 15rem;
+    margin: 1rem 0 0.5rem 1rem;
+    font-weight: 900;
+    cursor: pointer;
+}
+.page-selector i {
+    margin: 0 0.5rem;
+}
+
 @media only screen and (max-width: 700px) {
     .link {
         margin-bottom: 2rem;
@@ -247,4 +291,3 @@ button {
         margin-bottom: 3rem;
 }
 }
-

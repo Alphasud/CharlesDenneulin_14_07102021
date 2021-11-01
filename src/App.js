@@ -14,11 +14,12 @@ function App() {
             <HomePage />
         </Route>
           <Route exact path="/employeeList">
-            <EmployeeList /* employees = {employees} */ />
+            <EmployeeList />
         </Route>
 	    </Switch>
     </Router>
     </div>
+    
   );
 }
 
