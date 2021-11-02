@@ -92,6 +92,18 @@ button {
     /* display: flex;
     justify-content: center; */
 }
+.loading-spinner {
+    width: 75rem;
+    text-align: center;
+    margin-top: 10rem;
+}
+.loading-spinner i {
+    animation: 2s spin ease-in-out infinite;
+}
+@keyframes spin {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(360deg);}
+}
 employee-page__container {
     width: 75rem;
 }
@@ -205,12 +217,12 @@ employee-page__container {
     min-width: 7.5rem;
     height: 1rem;
 }
-.delete {
+.modify {
     min-width: 5rem;
     height: 1rem;
     text-align: start;
 }
-.delete i {
+.modify i {
     margin-top: 1rem;
     margin-right: 1.5rem;
     cursor: pointer;

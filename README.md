@@ -15,8 +15,8 @@ Convertion de l'appli existante [HRnet](https://github.com/OpenClassrooms-Studen
 
  ## Geting started
 Clone this repo, then
-`npm install`
-then,
+`npm install`,
+then
 `npm run start`
 
 It runs the app in the development mode.\

@@ -5,6 +5,7 @@ import { Modal } from 'modal-cd';
 import UpdateModal from './UpdateModal';
 
 function EmployeeList() {
+    const [isLoading, setIsLoading] = useState(true);
     const [entriesSelected, setEntriesSelected] = useState(10);
     const [fullArray, setFullArray] = useState([]);
     const [employees, setEmployees] = useState([]);
@@ -48,6 +49,7 @@ function EmployeeList() {
                     employeeArray.push(employee)
                     return employeeArray
                 })
+                employeeArray.length > 0 ? setIsLoading(false) : setIsLoading(true);
                 setFullArray(employeeArray);
                 setEmployees(createGroups(employeeArray, entriesSelected));
             } catch (e) {
@@ -117,7 +119,9 @@ function EmployeeList() {
             ];
         
         const searchedWithoutDuplicate = [...new Set(searched)];
-        setEmployees(createGroups(searchedWithoutDuplicate, entriesSelected))
+        setEmployees(createGroups(searchedWithoutDuplicate, entriesSelected));
+        setCurrentPage(1);
+
 
         if (!e.target.value) {
             setEmployees(createGroups(fullArray, entriesSelected))
@@ -161,10 +165,19 @@ function EmployeeList() {
         setCurrentPage(page);
     }
 
+   const totalLength = () => {
+        let entries = 0;
+        for (let x = 0; x < employees.length; x++) {
+            entries += employees[x].length;
+        }
+       return entries;
+    }
+
     return (
         <div className='employee-page'>
         <div className={isUpdating ? 'employee-page__container focusout' : 'employee-page__container'}>
         <h1 className='title'>Current Employees</h1>
+        <p className='entries'>Total: {fullArray.length} {fullArray.length > 1 ? 'employees' : 'employee'}</p>
         <Link className="employee__link" to='/'>Add Employee</Link>
         <div className='employee__search'>
             <label htmlFor="search">Search :</label>
@@ -177,7 +190,7 @@ function EmployeeList() {
                 <span className={entriesSelected === 50 ? 'selected': ''} onClick={() => setEntriesSelected(50)}>50</span>
                 <span className={entriesSelected === 100 ? 'selected': ''} onClick={() => setEntriesSelected(100)}>100</span>
             </div>
-            <p className='entry-message'>Showing page {currentPage} out of {numberOfPages} page(s) for a total of {fullArray.length} entries.</p>
+            <p className='entry-message'>Showing page {currentPage} out of {numberOfPages} {numberOfPages > 1 ? 'pages' : 'page'} for a total of {totalLength()} {totalLength() > 1 ? 'entries' : 'entry'}.</p>
         {numberOfPages > 1 ? <div className="page-selector">
             <span onClick={handlePreviousPage}><i className="fas fa-chevron-left"></i>Previous</span>
             <span onClick={handleNextPage}>Next<i className="fas fa-chevron-right"></i></span>
@@ -197,7 +210,7 @@ function EmployeeList() {
                 <div className='heading'>Action</div>
             </div>
         <div className='page'>
-            {employees.map((el, index) => {
+            { totalLength() > 0 ? employees.map((el, index) => {
                return <div key={Math.random()} className={index + 1 === currentPage ? 'list__employees shown' : 'list__employees'}>
                    {el.map(ele => {
                     return <div key={ele.id} className='list__employee'>
@@ -210,7 +223,7 @@ function EmployeeList() {
                     <p key={Math.random()}>{ele.city}</p>
                     <p key={Math.random()}>{ele.state}</p>
                     <p key={Math.random()}>{ele.zip}</p>
-                        <span className='delete'>
+                        <span className='modify'>
                             <i onClick={() => {
                                 setIsUpdating(true); setUpdatedUser({
                                     firstName: ele.firstName,
@@ -228,10 +241,12 @@ function EmployeeList() {
                             </i>
                             <i onClick={() => handleDelete(ele.id, ele.firstName)} className="fas fa-trash"></i>
                         </span>
-                </div>
+                    </div>
                    })}
                 </div>
-            })}
+                })
+            : <div className='loading-spinner'>{isLoading ? <i className="fas fa-sync-alt fa-2x"></i> : 'No datas'}</div>
+            }
         </div>       
         <Modal visible={isVisible} message={deleteMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse}/>
         </div> : <div className='error'><h3>Oooops, something went wrong when fetching datas...</h3></div>}
