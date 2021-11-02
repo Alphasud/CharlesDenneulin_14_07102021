@@ -2,6 +2,7 @@ import { React, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import db from '../firebaseConfig';
 import { Modal } from 'modal-cd';
+import UpdateModal from './UpdateModal';
 
 function EmployeeList() {
     const [entriesSelected, setEntriesSelected] = useState(10);
@@ -24,10 +25,14 @@ function EmployeeList() {
     const [numberOfPages, setNumberOfPages] = useState();
     const [currentPage, setCurrentPage] = useState(1);
 
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [updatedUser, setUpdatedUser] = useState({});
+
 
     const createGroups = (arr, entries) => {
         const pages = Math.ceil(arr.length / entries);
-        const perGroup = Math.ceil(arr.length / pages);
+        //const perGroup = Math.ceil(arr.length / pages); // equal number of entries per pages. 
+        const perGroup = entries; // number of entries per pages is specified by entry user choice.
         setNumberOfPages(pages);
         return new Array(pages)
         .fill('')
@@ -52,7 +57,9 @@ function EmployeeList() {
     
     useEffect(() => {
         fetchData();
+        setCurrentPage(1);
         setEmployees(createGroups(fullArray, entriesSelected));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [entriesSelected] );
 
     const sortArray = (name, type) => {
@@ -128,6 +135,13 @@ function EmployeeList() {
             console.log(error);
         }
     }
+    const handleClick = (data) => {
+        if (data) {
+            setIsUpdating(false);
+            fetchData();
+        }
+    }
+    
     const handleModalResponse = (data) => {
         if (data) {
             setIsVisibile(false);
@@ -149,7 +163,7 @@ function EmployeeList() {
 
     return (
         <div className='employee-page'>
-        <div className='employee-page__container'>
+        <div className={isUpdating ? 'employee-page__container focusout' : 'employee-page__container'}>
         <h1 className='title'>Current Employees</h1>
         <Link className="employee__link" to='/'>Add Employee</Link>
         <div className='employee__search'>
@@ -163,7 +177,7 @@ function EmployeeList() {
                 <span className={entriesSelected === 50 ? 'selected': ''} onClick={() => setEntriesSelected(50)}>50</span>
                 <span className={entriesSelected === 100 ? 'selected': ''} onClick={() => setEntriesSelected(100)}>100</span>
             </div>
-            <p className='entry-message'>Showing page {currentPage} of {numberOfPages} page(s) for a total of {fullArray.length} entries.</p>
+            <p className='entry-message'>Showing page {currentPage} out of {numberOfPages} page(s) for a total of {fullArray.length} entries.</p>
         {numberOfPages > 1 ? <div className="page-selector">
             <span onClick={handlePreviousPage}><i className="fas fa-chevron-left"></i>Previous</span>
             <span onClick={handleNextPage}>Next<i className="fas fa-chevron-right"></i></span>
@@ -196,7 +210,24 @@ function EmployeeList() {
                     <p key={Math.random()}>{ele.city}</p>
                     <p key={Math.random()}>{ele.state}</p>
                     <p key={Math.random()}>{ele.zip}</p>
-                    <span className='delete'><i className="fas fa-pen-alt"></i><i onClick={() => handleDelete(el.id, el.firstName)} className="fas fa-trash"></i></span>
+                        <span className='delete'>
+                            <i onClick={() => {
+                                setIsUpdating(true); setUpdatedUser({
+                                    firstName: ele.firstName,
+                                    lastName: ele.lastName,
+                                    birthDate: ele.birthDate,
+                                    startDate: ele.startDate,
+                                    street: ele.street,
+                                    city: ele.city,
+                                    state: ele.state,
+                                    zip: ele.zip,
+                                    department: ele.department,
+                                    id: ele.id
+                                })
+                            }} className="fas fa-pen-alt">  
+                            </i>
+                            <i onClick={() => handleDelete(ele.id, ele.firstName)} className="fas fa-trash"></i>
+                        </span>
                 </div>
                    })}
                 </div>
@@ -205,9 +236,15 @@ function EmployeeList() {
         <Modal visible={isVisible} message={deleteMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse}/>
         </div> : <div className='error'><h3>Oooops, something went wrong when fetching datas...</h3></div>}
         </div>
+        {isUpdating ? <div className='update-modal'>
+           <span><i onClick={() => setIsUpdating(false)} className="fas fa-times fa-2x"></i></span> 
+           <UpdateModal data={updatedUser} handleResponse={handleClick} />     
+        </div> : null}
         </div>
             
     );
 }
 
 export default EmployeeList;
+
+/* handleUpdate(ele.id, ele.firstName, ele.lastName, ele.startDate, ele.department, ele.birthDate, ele.street, ele.city, ele.state, ele.zip) */

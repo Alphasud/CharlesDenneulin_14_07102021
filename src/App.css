@@ -89,8 +89,8 @@ button {
 
 /* EMPLOYEE LIST */
 .employee-page {
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
 }
 employee-page__container {
     width: 75rem;
@@ -290,4 +290,36 @@ employee-page__container {
         width: 25%;
         margin-bottom: 3rem;
 }
+}
+
+/* Update Modal */
+.update-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    height: 30rem;
+    width: 50rem;
+    background-color: tomato;
+    border-radius: 10px;
+    border: 2px solid aliceblue;
+}
+.update-modal span {
+    position: relative;
+    cursor: pointer;
+}
+.update-modal span i {
+    position: absolute;
+    top: 2rem;
+    left: 1.5rem;
+}
+.update-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.focusout {
+    opacity: 0.2;
 }
