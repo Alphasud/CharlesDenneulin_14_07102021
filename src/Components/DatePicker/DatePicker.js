@@ -122,6 +122,11 @@ function DatePicker(props) {
     isComponentVisible,
     setIsComponentVisible
     } = useComponentVisible(false);
+
+    useEffect(() => {
+        props.handleResponse(date)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [date] );
     
     /* 
     * User updates inside the calendar 
@@ -186,14 +191,10 @@ function DatePicker(props) {
         )
     }
 
-    const handleChange = (data) => {
-        props.handleResponse(data)
-    }
-
     return (
         <div className='datepicker'>
                 <div ref={ref} onClick = {() => setIsComponentVisible(true)}>
-                <input className='datepicker__input' type='text' value={date.toLocaleDateString()} readOnly onChange={handleChange(date)} ref={inputRef}/>
+                <input className='datepicker__input' type='text' value={date.toLocaleDateString()} readOnly /* onInput={props.handleResponse(date)} */ ref={inputRef}/>
                 </div>
                 {isComponentVisible ? (
                 <div ref={ref} className='datepicker__container'>

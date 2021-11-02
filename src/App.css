@@ -88,10 +88,6 @@ button {
 }
 
 /* EMPLOYEE LIST */
-.employee-page {
-    /* display: flex;
-    justify-content: center; */
-}
 .loading-spinner {
     width: 75rem;
     text-align: center;

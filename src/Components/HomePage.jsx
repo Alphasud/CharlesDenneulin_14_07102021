@@ -11,8 +11,8 @@ function HomePage() {
     
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
-    const [birthDate, setBirthDate] = useState();
-    const [startDate, setStartDate] = useState();
+    const [birthDate, setBirthDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(new Date());
     const [street, setStreet] = useState('');
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
@@ -26,6 +26,7 @@ function HomePage() {
     const [addEmployeeMessage, setAddEmployeeMessage] = useState('');
 
     const [isVisible, setIsVisibile] = useState(false);
+
 
     const handleStateResponse = (data) => {
         setState(data)
@@ -45,7 +46,6 @@ function HomePage() {
             setAddEmployeeMessage('');
         }
     }
-
     const [firstNameError, setFirstNameError] = useState('');
     const [lastNameError, setLastNameError] = useState('');
     const [streetError, setSteetError] = useState('');
