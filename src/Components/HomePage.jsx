@@ -139,11 +139,11 @@ function HomePage() {
             <form>
                 <div className="credentials">
                     <label htmlFor="first-name">First Name</label>
-                    <input className='input' type="text" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
+                    <input className='input' id='first-name' type="text" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
                     {firstNameError ? <div className="form-error">{firstNameError}</div> : null}
 
                     <label htmlFor="last-name">Last Name</label>
-                    <input className='input' type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} />
+                    <input id="last-name" className='input' type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} />
                     {lastNameError ? <div className="form-error">{lastNameError}</div> : null}
 
                     <label htmlFor="date-of-birth">Date of Birth</label>
@@ -154,11 +154,11 @@ function HomePage() {
                 </div>
                 <div className="address">
                     <label htmlFor="street">Street</label>
-                    <input className='input' type="text" value={street} onChange={(event) => setStreet(event.target.value)} />
+                    <input id="street" className='input' type="text" value={street} onChange={(event) => setStreet(event.target.value)} />
                     {streetError ? <div className="form-error">{streetError}</div> : null}
 
                     <label htmlFor="city">City</label>
-                    <input className='input' type="text" value={city} onChange={(event) => setCity(event.target.value)} />
+                    <input id='city' className='input' type="text" value={city} onChange={(event) => setCity(event.target.value)} />
                     {cityError ? <div className="form-error">{cityError}</div> : null}
 
                     <label htmlFor="state">State</label>
@@ -166,7 +166,7 @@ function HomePage() {
                     {stateError ? <div className="form-error">{stateError}</div> : null}
 
                     <label htmlFor="zip-code">Zip Code</label>
-                    <input className='input' type="number" value={zip} onChange={(event) => setZip(event.target.value)} />
+                    <input id='zip-code' className='input' type="number" value={zip} onChange={(event) => setZip(event.target.value)} />
                     {zipError ? <div className="form-error">{zipError}</div> : null}
                 </div>
 

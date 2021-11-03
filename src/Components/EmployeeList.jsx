@@ -4,10 +4,10 @@ import db from '../firebaseConfig';
 import { Modal } from 'modal-cd';
 import UpdateModal from './UpdateModal';
 
-function EmployeeList() {
+function EmployeeList(props) {
     const [isLoading, setIsLoading] = useState(true);
     const [entriesSelected, setEntriesSelected] = useState(10);
-    const [fullArray, setFullArray] = useState([]);
+    const [fullArray, setFullArray] = useState(props.employees);
     const [employees, setEmployees] = useState([]);
     const [error, setError] = useState(false);
     const [deleteMessage, setDeleteMessage] = useState('');
@@ -45,10 +45,10 @@ function EmployeeList() {
             try {
                 const data = await db.collection('employee').get();
                 data.docs.map(el => {
-                    let employee = { ...el.data(), 'id': el.id}
-                    employeeArray.push(employee)
-                    return employeeArray
-                })
+                    let employee = { ...el.data(), 'id': el.id }
+                    employeeArray.push(employee);
+                    return employeeArray;
+                });
                 employeeArray.length > 0 ? setIsLoading(false) : setIsLoading(true);
                 setFullArray(employeeArray);
                 setEmployees(createGroups(employeeArray, entriesSelected));
@@ -56,9 +56,16 @@ function EmployeeList() {
                 setError(true);
             } 
     }
-    
+
     useEffect(() => {
-        fetchData();
+        props.employees.length > 0 ? setIsLoading(false) : setIsLoading(true);
+        setFullArray(props.employees);
+        setEmployees(createGroups(props.employees, entriesSelected));
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.employees]);
+    
+     useEffect(() => {
+       // fetchData();
         setCurrentPage(1);
         setEmployees(createGroups(fullArray, entriesSelected));
         // eslint-disable-next-line react-hooks/exhaustive-deps
