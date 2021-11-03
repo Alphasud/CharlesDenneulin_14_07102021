@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import db from '../firebaseConfig';
 import { Modal } from 'modal-cd';
 import UpdateModal from './UpdateModal';
+import LoginModal from './LoginModal';
 
 function EmployeeList(props) {
+    const [isLogged, setIsLogged] = useState(props.auth);
+    const [loginModal, setLoginModal] = useState(false);
+    const [messageToLogin, setMessageToLogin] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [entriesSelected, setEntriesSelected] = useState(10);
     const [fullArray, setFullArray] = useState(props.employees);
@@ -136,15 +140,17 @@ function EmployeeList(props) {
     }
 
     const handleDelete = (id, firstName) => {
-        console.log(`Delete user with id: ${id}`);
-        try {
-            db.collection('employee').doc(id).delete();
-            setIsVisibile(true);
-            setDeleteMessage(`Gotcha! ${firstName} is no longer in the team ;)`);
-        } catch (error) {
-            console.log('Error deleting employee');
-            console.log(error);
-        }
+        if (isLogged) {
+            console.log(`Delete user with id: ${id}`);
+            try {
+                db.collection('employee').doc(id).delete();
+                setIsVisibile(true);
+                setDeleteMessage(`Gotcha! ${firstName} is no longer in the team ;)`);
+            } catch (error) {
+                console.log('Error deleting employee');
+                console.log(error);
+            }
+        } else {setMessageToLogin(true)}
     }
     const handleClick = (data) => {
         if (data) {
@@ -159,6 +165,17 @@ function EmployeeList(props) {
             setDeleteMessage('');
             fetchData();
         }
+    }
+    const handleMessageLoginResponse = (data) => {
+        if (data) { setMessageToLogin(false) };
+    }
+
+    const getResponseFromLoginModal = (data) => {
+        if (data === 'success') {
+            setLoginModal(false);
+            setIsLogged(true)
+            props.handleLogState(data);
+        };
     }
 
     const handlePreviousPage = () => {
@@ -182,10 +199,11 @@ function EmployeeList(props) {
 
     return (
         <div className='employee-page'>
-        <div className={isUpdating ? 'employee-page__container focusout' : 'employee-page__container'}>
+        <div className={isUpdating || loginModal ? 'employee-page__container focusout' : 'employee-page__container'}>
         <h1 className='title'>Current Employees</h1>
+                <div className="log" onClick={() => { isLogged ? setIsLogged(false) : setLoginModal(true) }}>{isLogged ? 'Logout' : 'Login'}</div>
         <p className='entries'>Total: {fullArray.length} {fullArray.length > 1 ? 'employees' : 'employee'}</p>
-        <Link className="employee__link" to='/'>Add Employee</Link>
+        {isLogged ? <Link className="employee__link" to='/add-employee'>Add Employee</Link> : <div className='employee__link' onClick={() => setMessageToLogin(true)}>Add Employee</div>}
         <div className='employee__search'>
             <label htmlFor="search">Search :</label>
                 <input name='search' type="text" onInput={(e) => handleSearch(e)}/>
@@ -232,19 +250,21 @@ function EmployeeList(props) {
                     <p key={Math.random()}>{ele.zip}</p>
                         <span className='modify'>
                             <i onClick={() => {
-                                setIsUpdating(true); setUpdatedUser({
-                                    firstName: ele.firstName,
-                                    lastName: ele.lastName,
-                                    birthDate: ele.birthDate,
-                                    startDate: ele.startDate,
-                                    street: ele.street,
-                                    city: ele.city,
-                                    state: ele.state,
-                                    zip: ele.zip,
-                                    department: ele.department,
-                                    id: ele.id
-                                })
-                            }} className="fas fa-pen-alt">  
+                                if (isLogged) {
+                                    setIsUpdating(true); setUpdatedUser({
+                                        firstName: ele.firstName,
+                                        lastName: ele.lastName,
+                                        birthDate: ele.birthDate,
+                                        startDate: ele.startDate,
+                                        street: ele.street,
+                                        city: ele.city,
+                                        state: ele.state,
+                                        zip: ele.zip,
+                                        department: ele.department,
+                                        id: ele.id
+                                    })
+                                } else {setMessageToLogin(true)}
+                            }} className="fas fa-pen-alt">
                             </i>
                             <i onClick={() => handleDelete(ele.id, ele.firstName)} className="fas fa-trash"></i>
                         </span>
@@ -258,9 +278,17 @@ function EmployeeList(props) {
         <Modal visible={isVisible} message={deleteMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse}/>
         </div> : <div className='error'><h3>Oooops, something went wrong when fetching datas...</h3></div>}
         </div>
+        
         {isUpdating ? <div className='update-modal'>
            <span><i onClick={() => setIsUpdating(false)} className="fas fa-times fa-2x"></i></span> 
            <UpdateModal data={updatedUser} handleResponse={handleClick} />     
+        </div> : null}
+        
+        <Modal visible={messageToLogin} message='You need to be logged in to add, update or delete an employee.' buttonMessage='OKAY!' handleResponse={handleMessageLoginResponse}/>
+
+        {loginModal ? <div className='log-modal'>
+           <span><i onClick={() => setLoginModal(false)} className="fas fa-times fa-2x"></i></span> 
+           <LoginModal handleResponse={getResponseFromLoginModal} />    
         </div> : null}
         </div>
             

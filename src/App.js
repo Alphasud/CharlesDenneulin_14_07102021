@@ -8,6 +8,7 @@ import db from './firebaseConfig';
 
 function App() {
   const [data, setData] = useState([]);
+  const [logged, setLogged] = useState(false);
 
   const fetchData = async () => {
   let employeeArray = [];
@@ -30,15 +31,19 @@ function App() {
    fetchData()
   }, [])
   
+  const handleLogState = (data) => {
+    if (data === 'success') setLogged(true);
+  }
+  
   return (
     <div className="App">
       <Router>
        <Switch>
           <Route exact path="/">
-            <HomePage />
+            <EmployeeList employees={data} handleLogState={handleLogState} auth={logged}/>
         </Route>
-          <Route exact path="/employeeList">
-            <EmployeeList employees={data}/>
+          <Route exact path="/add-employee">
+            <HomePage auth={logged}/>
         </Route>
 	    </Switch>
     </Router>

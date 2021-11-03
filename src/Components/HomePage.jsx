@@ -5,7 +5,7 @@ import Dropdown from './Dropdown/Dropdown';
 import db from '../firebaseConfig';
 import { Modal } from 'modal-cd';
 
-function HomePage() {
+function HomePage(props) {
     const departments = ['Sales', 'Marketing', 'Engineering', 'Human Ressources', 'Legal'];
     const states = ['Alabama', 'Alaska', 'American Samoa', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'District of Columbia', 'Federated States of Micronesia', 'Florida', 'Georgia', 'Guam', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Marshall Islands', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Northern Mariana Islands', 'Ohio', 'Oklahoma', 'Oregon', 'Palau', 'Pennsylvania', 'Puerto Rico', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virgin Island', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
     
@@ -133,8 +133,8 @@ function HomePage() {
         <div className="title">
             <h1>HR.net</h1>
         </div>
-        <div className="container">
-            <Link className="link" to='/employeeList'>View Current Employees</Link>
+        {props.auth ? <div className="container">
+            <Link className="link" to='/'>View Current Employees</Link>
             <h2>Add a New Member to the Team ✏️</h2>
             <form>
                 <div className="credentials">
@@ -177,7 +177,7 @@ function HomePage() {
                 </div>
             </form>
             <button onClick={handleSubmit}>Add!</button>
-        </div>
+        </div> : <div className="unauthorized"><div>Unauthorized ! How did you get there ? You must be logged-in to access this page</div><div><Link className="link" to='/'>Go Back</Link></div></div>}
         <Modal visible={isVisible} message={addEmployeeMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse} />
         {error ? <Modal visible={true} message='Ooops, something went wrong...' buttonMessage='OKAY...' handleResponse={handleModalResponse} /> : ''}
     </>
