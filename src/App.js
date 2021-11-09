@@ -34,6 +34,9 @@ function App() {
   const handleLogState = (data) => {
     if (data === 'success') setLogged(true);
   }
+  const handleEmployeeAdd = (data) => {
+    if (data === 'added') { fetchData() };
+  }
   
   return (
     <div className="App">
@@ -43,7 +46,7 @@ function App() {
             <EmployeeList employees={data} handleLogState={handleLogState} auth={logged}/>
         </Route>
           <Route exact path="/add-employee">
-            <HomePage auth={logged}/>
+            <HomePage auth={logged} handleEmployeeAdd={handleEmployeeAdd}/>
         </Route>
 	    </Switch>
     </Router>

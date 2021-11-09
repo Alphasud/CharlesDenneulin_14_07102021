@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import './Modal.css';
-
+/**
+ * Modal Component.
+ *
+ * @component
+ */
 function Modal(props) {
 
     const [visible, setVisible] = useState(true);

@@ -6,7 +6,9 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "better-docs": "^2.3.2",
     "firebase": "^9.1.2",
+    "jsdoc": "^3.6.7",
     "modal-cd": "^1.1.8",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -15,6 +17,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "docs": "jsdoc -c jsdoc.conf.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

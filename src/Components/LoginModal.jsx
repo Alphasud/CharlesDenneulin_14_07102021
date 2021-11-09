@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react";
 import db from "../firebaseConfig";
 
+
+/**
+ * Component for login.
+ *
+ * @component
+ */
 function LoginModal(props) {
 
     const [email, setEmail] = useState('');
@@ -10,7 +16,9 @@ function LoginModal(props) {
     const [logError, setLogError] = useState(false);
     const [user, setUser] = useState();
 
-
+/**
+ * <Validate form>
+ */
     const validate = () => {
         let emailErrorMessage = '';
         let passwordErrorMessage = '';
@@ -42,7 +50,10 @@ function LoginModal(props) {
     useEffect(() => {
         fetchData()
     }, [])
-   
+
+/**
+ * <Handles submission>
+ */
   const handleSubmit = (event) => {
       event.preventDefault();
       if (validate()) {

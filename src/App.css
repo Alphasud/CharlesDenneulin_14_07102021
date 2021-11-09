@@ -100,8 +100,12 @@ button {
   from {transform: rotate(0deg);}
   to {transform: rotate(360deg);}
 }
-employee-page__container {
+.employee-page {
     width: 75rem;
+    margin: 0 auto;
+}
+employee-page__container {
+    width: 100%;
 }
 .employee__search {
     display: flex;

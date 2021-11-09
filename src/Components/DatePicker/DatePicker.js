@@ -36,9 +36,11 @@ function useComponentVisible(initialIsVisible) {
 
   return { ref, isComponentVisible, setIsComponentVisible };
 }
-/* 
-    * Date Picker component
-*/
+/**
+ * Datepicker Component.
+ *
+ * @component
+ */
 function DatePicker(props) {
 
     let inputRef = useRef(null);

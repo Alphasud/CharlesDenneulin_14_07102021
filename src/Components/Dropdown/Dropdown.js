@@ -1,6 +1,11 @@
 import './Dropdown.css';
 import { useEffect, useRef, useState } from 'react';
 
+/**
+ * Dropdown menu component.
+ *
+ * @component
+ */
 function Dropdown(props) {
 
     const [isComponentVisible, setIsComponentVisible] = useState(false);

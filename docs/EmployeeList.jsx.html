@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: EmployeeList.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: EmployeeList.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { React, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import db from '../firebaseConfig';
+import { Modal } from 'modal-cd';
+import UpdateModal from './UpdateModal';
+import LoginModal from './LoginModal';
+/**
+ * Component for the employee list.
+ *
+ * @component
+ */
+function EmployeeList(props) {
+    const [isLogged, setIsLogged] = useState(props.auth);
+    const [loginModal, setLoginModal] = useState(false);
+    const [messageToLogin, setMessageToLogin] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [entriesSelected, setEntriesSelected] = useState(10);
+    const [fullArray, setFullArray] = useState(props.employees);
+    const [employees, setEmployees] = useState([]);
+    const [error, setError] = useState(false);
+    const [deleteMessage, setDeleteMessage] = useState('');
+    const [isVisible, setIsVisibile] = useState(false);
+
+    const [isFirstNameClicked, setIsFirstNameClicked] = useState(false);
+    const [isLastNameClicked, setIsLastNameClicked] = useState(false);
+    const [isBirthDateClicked, setIsBirthDateClicked] = useState(false);
+    const [isStartDateClicked, setIsStartDateClicked] = useState(false);
+    const [isStreetClicked, setIsStreetClicked] = useState(false);
+    const [isCityClicked, setIsCityClicked] = useState(false);
+    const [isStateClicked, setIsStateClicked] = useState(false);
+    const [isZipClicked, setIsZipClicked] = useState(false);
+    const [isDepartmentClicked, setIsDepartmentClicked] = useState(false);
+
+    const [numberOfPages, setNumberOfPages] = useState();
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const [isUpdating, setIsUpdating] = useState(false);
+    const [updatedUser, setUpdatedUser] = useState({});
+
+/**
+ * &lt;Takes in an array and split it into several arrays>
+ * @param   {array} arr &lt;initial array>
+ * @param   {number} entries &lt;sub array max length>
+ * @return  {array}        &lt;array of arrays>
+ */
+    const createGroups = (arr, entries) => {
+        const pages = Math.ceil(arr.length / entries);
+        //const perGroup = Math.ceil(arr.length / pages); // equal number of entries per pages. 
+        const perGroup = entries; // number of entries per pages is specified by entry user choice.
+        setNumberOfPages(pages);
+        return new Array(pages)
+        .fill('')
+        .map((_, i) => arr.slice(i * perGroup, (i + 1) * perGroup));
+    }
+
+    const fetchData = async () => {
+            let employeeArray = [];
+            try {
+                const data = await db.collection('employee').get();
+                data.docs.map(el => {
+                    let employee = { ...el.data(), 'id': el.id }
+                    employeeArray.push(employee);
+                    return employeeArray;
+                });
+                employeeArray.length > 0 ? setIsLoading(false) : setIsLoading(true);
+                setFullArray(employeeArray);
+                setEmployees(createGroups(employeeArray, entriesSelected));
+            } catch (e) {
+                setError(true);
+            } 
+    }
+
+    useEffect(() => {
+        props.employees.length > 0 ? setIsLoading(false) : setIsLoading(true);
+        setFullArray(props.employees);
+        setEmployees(createGroups(props.employees, entriesSelected));
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.employees]);
+    
+     useEffect(() => {
+       // fetchData();
+        setCurrentPage(1);
+        setEmployees(createGroups(fullArray, entriesSelected));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [entriesSelected] );
+
+    /**
+ * &lt;Sort array>
+ * @param   {string} name &lt;The 'property' of the array you wish to sort>
+ * @param   {string} type &lt;the type of sorting>
+ * @return  {array}        &lt;sorted array>
+ */
+    const sortArray = (name, type) => {
+        if (type === 'ascending') {
+            const sorted = [...fullArray].sort((a, b) => a[name] > b[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
+        }
+        if (type === 'descending') {
+            const sorted = [...fullArray].sort((a, b) => a[name] &lt; b[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
+        }
+        if (type === 'number-ascending') {
+            const sorted = [...fullArray].sort((a, b) => a[name] - b[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
+        }
+        if (type === 'number-descending') {
+            const sorted = [...fullArray].sort((a, b) => b[name] - a[name]);
+            setEmployees(createGroups(sorted, entriesSelected));
+        }
+    }
+    /**
+ * &lt;Search in array>
+ * @param   {string} string &lt;The string you want to search>
+ * @return  {array}        &lt;filtered array>
+ */
+    const handleSearch = (e) => {
+        setEmployees(createGroups(fullArray, entriesSelected))
+        const arrayOfEmployees = fullArray;
+        
+        const searchedFirstName = [...arrayOfEmployees].filter(el => {
+            return el.firstName.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        const searchedLastName = [...arrayOfEmployees].filter(el => {
+            return el.lastName.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        const searchedDepartment = [...arrayOfEmployees].filter(el => {
+            return el.department.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        const searchedStreet = [...arrayOfEmployees].filter(el => {
+            return el.street.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        const searchedCity = [...arrayOfEmployees].filter(el => {
+            return el.city.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        const searchedState = [...arrayOfEmployees].filter(el => {
+            return el.state.toLowerCase().includes(e.target.value.toLowerCase());
+        });
+        const searchedZip = [...arrayOfEmployees].filter(el => {
+            return el.zip.toString().includes(e.target.value.toLowerCase());
+        });
+        const searched = [
+            ...searchedFirstName,
+            ...searchedLastName,
+            ...searchedDepartment,
+            ...searchedStreet,
+            ...searchedCity,
+            ...searchedState,
+            ...searchedZip
+            ];
+        
+        const searchedWithoutDuplicate = [...new Set(searched)];
+        setEmployees(createGroups(searchedWithoutDuplicate, entriesSelected));
+        setCurrentPage(1);
+
+
+        if (!e.target.value) {
+            setEmployees(createGroups(fullArray, entriesSelected))
+        }
+    }
+    /**
+ * &lt;Delete particular entry>
+ * @param   {string} id &lt;The id of the element to delete>
+ * @param   {string} firstName &lt;firstName>
+ */
+    const handleDelete = (id, firstName) => {
+        if (isLogged) {
+            console.log(`Delete user with id: ${id}`);
+            try {
+                db.collection('employee').doc(id).delete();
+                setIsVisibile(true);
+                setDeleteMessage(`Gotcha! ${firstName} is no longer in the team ;)`);
+            } catch (error) {
+                console.log('Error deleting employee');
+                console.log(error);
+            }
+        } else {setMessageToLogin(true)}
+    }
+
+    //// Handlers.
+    const handleClick = (data) => {
+        if (data) {
+            setIsUpdating(false);
+            fetchData();
+        }
+    }
+    const handleModalResponse = (data) => {
+        if (data) {
+            setIsVisibile(false);
+            setDeleteMessage('');
+            fetchData();
+        }
+    }
+    const handleMessageLoginResponse = (data) => {
+        if (data) { setMessageToLogin(false) };
+    }
+
+    const getResponseFromLoginModal = (data) => {
+        if (data === 'success') {
+            setLoginModal(false);
+            setIsLogged(true)
+            props.handleLogState(data);
+        };
+    }
+    const handlePreviousPage = () => {
+        let page = currentPage - 1;
+        if (page &lt; 1) page = 1;
+        setCurrentPage(page);
+    }
+    const handleNextPage = () => {
+        let page = currentPage + 1;
+        if (page > numberOfPages) page = numberOfPages;
+        setCurrentPage(page);
+    }
+
+   const totalLength = () => {
+        let entries = 0;
+        for (let x = 0; x &lt; employees.length; x++) {
+            entries += employees[x].length;
+        }
+       return entries;
+    }
+
+    return (
+        &lt;div className='employee-page'>
+        &lt;div className={isUpdating || loginModal ? 'employee-page__container focusout' : 'employee-page__container'}>
+        &lt;h1 className='title'>Current Employees&lt;/h1>
+                &lt;div className="log" onClick={() => { isLogged ? setIsLogged(false) : setLoginModal(true) }}>{isLogged ? 'Logout' : 'Login'}&lt;/div>
+        &lt;p className='entries'>Total: {fullArray.length} {fullArray.length > 1 ? 'employees' : 'employee'}&lt;/p>
+        {isLogged ? &lt;Link className="employee__link" to='/add-employee'>Add Employee&lt;/Link> : &lt;div className='employee__link' onClick={() => setMessageToLogin(true)}>Add Employee&lt;/div>}
+        &lt;div className='employee__search'>
+            &lt;label htmlFor="search">Search :&lt;/label>
+                &lt;input name='search' type="text" onInput={(e) => handleSearch(e)}/>
+            &lt;/div>
+            &lt;div className="entries">
+                &lt;p>Entries per page : &lt;/p>
+                &lt;span className={entriesSelected === 10 ? 'selected': ''} onClick={() => setEntriesSelected(10)}>10&lt;/span>
+                &lt;span className={entriesSelected === 25 ? 'selected': ''} onClick={() => setEntriesSelected(25)}>25&lt;/span>
+                &lt;span className={entriesSelected === 50 ? 'selected': ''} onClick={() => setEntriesSelected(50)}>50&lt;/span>
+                &lt;span className={entriesSelected === 100 ? 'selected': ''} onClick={() => setEntriesSelected(100)}>100&lt;/span>
+            &lt;/div>
+            &lt;p className='entry-message'>Showing page {currentPage} out of {numberOfPages} {numberOfPages > 1 ? 'pages' : 'page'} for a total of {totalLength()} {totalLength() > 1 ? 'entries' : 'entry'}.&lt;/p>
+        {numberOfPages > 1 ? &lt;div className="page-selector">
+            &lt;span onClick={handlePreviousPage}>&lt;i className="fas fa-chevron-left">&lt;/i>Previous&lt;/span>
+            &lt;span onClick={handleNextPage}>Next&lt;i className="fas fa-chevron-right">&lt;/i>&lt;/span>
+        &lt;/div> : null}
+        { !error ? 
+        &lt;div className='employee-container'>
+            &lt;div className='headings-container'>
+                &lt;div className='heading'>First Name &lt;i className={!isFirstNameClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsFirstNameClicked(!isFirstNameClicked); !isFirstNameClicked ? sortArray('firstName', 'ascending') : sortArray('firstName', 'descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>Last Name &lt;i className={!isLastNameClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsLastNameClicked(!isLastNameClicked); !isLastNameClicked ? sortArray('lastName', 'ascending') : sortArray('lastName', 'descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>Start Date &lt;i className={!isStartDateClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsStartDateClicked(!isStartDateClicked); !isStartDateClicked ? sortArray('startDate', 'number-ascending') : sortArray('startDate', 'number-descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>Department &lt;i className={!isDepartmentClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsDepartmentClicked(!isDepartmentClicked); !isDepartmentClicked ? sortArray('department', 'ascending') : sortArray('department', 'descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>Date of Birth &lt;i className={!isBirthDateClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsBirthDateClicked(!isBirthDateClicked); !isBirthDateClicked ? sortArray('birthDate', 'number-ascending') : sortArray('birthDate', 'number-descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>Street &lt;i className={!isStreetClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsStreetClicked(!isStreetClicked); !isStreetClicked ? sortArray('street', 'ascending') : sortArray('street', 'descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>City &lt;i className={!isCityClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsCityClicked(!isCityClicked); !isCityClicked ? sortArray('city', 'ascending') : sortArray('city', 'descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>State &lt;i className={!isStateClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsStateClicked(!isStateClicked); !isStateClicked ? sortArray('state', 'ascending') : sortArray('state', 'descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>Zip Code &lt;i className={!isZipClicked ? ' fas fa-chevron-up' : 'fas fa-chevron-down'} onClick={() => { setIsZipClicked(!isZipClicked); !isZipClicked ? sortArray('zip', 'number-ascending') : sortArray('zip', 'number-descending')}}>&lt;/i>&lt;/div>
+                &lt;div className='heading'>Action&lt;/div>
+            &lt;/div>
+        &lt;div className='page'>
+            { totalLength() > 0 ? employees.map((el, index) => {
+               return &lt;div key={Math.random()} className={index + 1 === currentPage ? 'list__employees shown' : 'list__employees'}>
+                   {el.map(ele => {
+                    return &lt;div key={ele.id} className='list__employee'>
+                    &lt;p key={Math.random()}>{ele.firstName}&lt;/p>
+                    &lt;p key={Math.random()}>{ele.lastName}&lt;/p>
+                    &lt;p key={Math.random()}>{new Date(ele.startDate.seconds*1000).toDateString()}&lt;/p>
+                    &lt;p key={Math.random()}>{ele.department}&lt;/p>
+                    &lt;p key={Math.random()}>{new Date(ele.birthDate.seconds*1000).toDateString()}&lt;/p>
+                    &lt;p key={Math.random()}>{ele.street}&lt;/p>
+                    &lt;p key={Math.random()}>{ele.city}&lt;/p>
+                    &lt;p key={Math.random()}>{ele.state}&lt;/p>
+                    &lt;p key={Math.random()}>{ele.zip}&lt;/p>
+                        &lt;span className='modify'>
+                            &lt;i onClick={() => {
+                                if (isLogged) {
+                                    setIsUpdating(true); setUpdatedUser({
+                                        firstName: ele.firstName,
+                                        lastName: ele.lastName,
+                                        birthDate: ele.birthDate,
+                                        startDate: ele.startDate,
+                                        street: ele.street,
+                                        city: ele.city,
+                                        state: ele.state,
+                                        zip: ele.zip,
+                                        department: ele.department,
+                                        id: ele.id
+                                    })
+                                } else {setMessageToLogin(true)}
+                            }} className="fas fa-pen-alt">
+                            &lt;/i>
+                            &lt;i onClick={() => handleDelete(ele.id, ele.firstName)} className="fas fa-trash">&lt;/i>
+                        &lt;/span>
+                    &lt;/div>
+                   })}
+                &lt;/div>
+                })
+            : &lt;div className='loading-spinner'>{isLoading ? &lt;i className="fas fa-sync-alt fa-2x">&lt;/i> : 'No datas'}&lt;/div>
+            }
+        &lt;/div>       
+        &lt;Modal visible={isVisible} message={deleteMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse}/>
+        &lt;/div> : &lt;div className='error'>&lt;h3>Oooops, something went wrong when fetching datas...&lt;/h3>&lt;/div>}
+        &lt;/div>
+        
+        {isUpdating ? &lt;div className='update-modal'>
+           &lt;span>&lt;i onClick={() => setIsUpdating(false)} className="fas fa-times fa-2x">&lt;/i>&lt;/span> 
+           &lt;UpdateModal data={updatedUser} handleResponse={handleClick} />     
+        &lt;/div> : null}
+        
+        &lt;Modal visible={messageToLogin} message='You need to be logged in to add, update or delete an employee.' buttonMessage='OKAY!' handleResponse={handleMessageLoginResponse}/>
+
+        {loginModal ? &lt;div className='log-modal'>
+           &lt;span>&lt;i onClick={() => setLoginModal(false)} className="fas fa-times fa-2x">&lt;/i>&lt;/span> 
+           &lt;LoginModal handleResponse={getResponseFromLoginModal} />    
+        &lt;/div> : null}
+        &lt;/div>
+            
+    );
+}
+
+export default EmployeeList;
+
+/* handleUpdate(ele.id, ele.firstName, ele.lastName, ele.startDate, ele.department, ele.birthDate, ele.street, ele.city, ele.state, ele.zip) */</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DatePicker.html">DatePicker</a></li><li><a href="Dropdown.html">Dropdown</a></li><li><a href="EmployeeList.html">EmployeeList</a></li><li><a href="HomePage.html">HomePage</a></li><li><a href="LoginModal.html">LoginModal</a></li><li><a href="Modal.html">Modal</a></li><li><a href="UpdateModal.html">UpdateModal</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Nov 09 2021 10:06:03 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

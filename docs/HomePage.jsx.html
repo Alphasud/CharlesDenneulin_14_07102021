@@ -1,4 +1,32 @@
-import { useState } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: HomePage.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: HomePage.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import DatePicker from './DatePicker/DatePicker';
 import Dropdown from './Dropdown/Dropdown';
@@ -60,7 +88,7 @@ function HomePage(props) {
     const [departmentError, setDepartmentError] = useState('');
 
 /**
- * <Validate form>
+ * &lt;Validate form>
  */
   const validate = () => {
 
@@ -97,7 +125,7 @@ function HomePage(props) {
   };
 
     /**
- * <Handle Submission>
+ * &lt;Handle Submission>
  */
     const handleSubmit = (e) => {
         if (validate()) {
@@ -140,59 +168,81 @@ function HomePage(props) {
         }
     }
 
-    return ( <>
-        <div className="title">
-            <h1>HR.net</h1>
-        </div>
-        {props.auth ? <div className="container">
-            <Link className="link" to='/'>View Current Employees</Link>
-            <h2>Add a New Member to the Team ✏️</h2>
-            <form>
-                <div className="credentials">
-                    <label htmlFor="first-name">First Name</label>
-                    <input className='input' id='first-name' type="text" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
-                    {firstNameError ? <div className="form-error">{firstNameError}</div> : null}
+    return ( &lt;>
+        &lt;div className="title">
+            &lt;h1>HR.net&lt;/h1>
+        &lt;/div>
+        {props.auth ? &lt;div className="container">
+            &lt;Link className="link" to='/'>View Current Employees&lt;/Link>
+            &lt;h2>Add a New Member to the Team ✏️&lt;/h2>
+            &lt;form>
+                &lt;div className="credentials">
+                    &lt;label htmlFor="first-name">First Name&lt;/label>
+                    &lt;input className='input' id='first-name' type="text" value={firstName} onChange={(event) => setFirstName(event.target.value)} />
+                    {firstNameError ? &lt;div className="form-error">{firstNameError}&lt;/div> : null}
 
-                    <label htmlFor="last-name">Last Name</label>
-                    <input id="last-name" className='input' type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} />
-                    {lastNameError ? <div className="form-error">{lastNameError}</div> : null}
+                    &lt;label htmlFor="last-name">Last Name&lt;/label>
+                    &lt;input id="last-name" className='input' type="text" value={lastName} onChange={(event) => setLastName(event.target.value)} />
+                    {lastNameError ? &lt;div className="form-error">{lastNameError}&lt;/div> : null}
 
-                    <label htmlFor="date-of-birth">Date of Birth</label>
-                    <DatePicker handleResponse={handleBirthDateResponse} key={resetBirth}/>
+                    &lt;label htmlFor="date-of-birth">Date of Birth&lt;/label>
+                    &lt;DatePicker handleResponse={handleBirthDateResponse} key={resetBirth}/>
                     
-                    <label htmlFor="start-date">Start Date</label>
-                    <DatePicker handleResponse={handleStartDateResponse} key={resetStart}/>
-                </div>
-                <div className="address">
-                    <label htmlFor="street">Street</label>
-                    <input id="street" className='input' type="text" value={street} onChange={(event) => setStreet(event.target.value)} />
-                    {streetError ? <div className="form-error">{streetError}</div> : null}
+                    &lt;label htmlFor="start-date">Start Date&lt;/label>
+                    &lt;DatePicker handleResponse={handleStartDateResponse} key={resetStart}/>
+                &lt;/div>
+                &lt;div className="address">
+                    &lt;label htmlFor="street">Street&lt;/label>
+                    &lt;input id="street" className='input' type="text" value={street} onChange={(event) => setStreet(event.target.value)} />
+                    {streetError ? &lt;div className="form-error">{streetError}&lt;/div> : null}
 
-                    <label htmlFor="city">City</label>
-                    <input id='city' className='input' type="text" value={city} onChange={(event) => setCity(event.target.value)} />
-                    {cityError ? <div className="form-error">{cityError}</div> : null}
+                    &lt;label htmlFor="city">City&lt;/label>
+                    &lt;input id='city' className='input' type="text" value={city} onChange={(event) => setCity(event.target.value)} />
+                    {cityError ? &lt;div className="form-error">{cityError}&lt;/div> : null}
 
-                    <label htmlFor="state">State</label>
-                    <Dropdown reset={reset} data={states} name='state' handleResponse={handleStateResponse} />
-                    {stateError ? <div className="form-error">{stateError}</div> : null}
+                    &lt;label htmlFor="state">State&lt;/label>
+                    &lt;Dropdown reset={reset} data={states} name='state' handleResponse={handleStateResponse} />
+                    {stateError ? &lt;div className="form-error">{stateError}&lt;/div> : null}
 
-                    <label htmlFor="zip-code">Zip Code</label>
-                    <input id='zip-code' className='input' type="number" value={zip} onChange={(event) => setZip(event.target.value)} />
-                    {zipError ? <div className="form-error">{zipError}</div> : null}
-                </div>
+                    &lt;label htmlFor="zip-code">Zip Code&lt;/label>
+                    &lt;input id='zip-code' className='input' type="number" value={zip} onChange={(event) => setZip(event.target.value)} />
+                    {zipError ? &lt;div className="form-error">{zipError}&lt;/div> : null}
+                &lt;/div>
 
-                <div className="department">
-                     <label htmlFor="department">Department</label>
-                    <Dropdown reset={reset} data={departments} name='department' handleResponse={handleDepartmentResponse} />
-                    {departmentError ? <div className="form-error">{departmentError}</div> : null}
-                </div>
-            </form>
-            <button onClick={handleSubmit}>Add!</button>
-        </div> : <div className="unauthorized"><div>Unauthorized ! How did you get there ? You must be logged-in to access this page</div><div><Link className="link" to='/'>Go Back</Link></div></div>}
-        <Modal visible={isVisible} message={addEmployeeMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse} />
-        {error ? <Modal visible={true} message='Ooops, something went wrong...' buttonMessage='OKAY...' handleResponse={handleModalResponse} /> : ''}
-    </>
+                &lt;div className="department">
+                     &lt;label htmlFor="department">Department&lt;/label>
+                    &lt;Dropdown reset={reset} data={departments} name='department' handleResponse={handleDepartmentResponse} />
+                    {departmentError ? &lt;div className="form-error">{departmentError}&lt;/div> : null}
+                &lt;/div>
+            &lt;/form>
+            &lt;button onClick={handleSubmit}>Add!&lt;/button>
+        &lt;/div> : &lt;div className="unauthorized">&lt;div>Unauthorized ! How did you get there ? You must be logged-in to access this page&lt;/div>&lt;div>&lt;Link className="link" to='/'>Go Back&lt;/Link>&lt;/div>&lt;/div>}
+        &lt;Modal visible={isVisible} message={addEmployeeMessage} buttonMessage='OKAY!' handleResponse={handleModalResponse} />
+        {error ? &lt;Modal visible={true} message='Ooops, something went wrong...' buttonMessage='OKAY...' handleResponse={handleModalResponse} /> : ''}
+    &lt;/>
   );
 }
 
-export default HomePage;
+export default HomePage;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DatePicker.html">DatePicker</a></li><li><a href="Dropdown.html">Dropdown</a></li><li><a href="EmployeeList.html">EmployeeList</a></li><li><a href="HomePage.html">HomePage</a></li><li><a href="LoginModal.html">LoginModal</a></li><li><a href="Modal.html">Modal</a></li><li><a href="UpdateModal.html">UpdateModal</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Nov 09 2021 10:06:03 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

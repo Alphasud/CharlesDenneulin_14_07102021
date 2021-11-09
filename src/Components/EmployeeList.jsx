@@ -4,7 +4,11 @@ import db from '../firebaseConfig';
 import { Modal } from 'modal-cd';
 import UpdateModal from './UpdateModal';
 import LoginModal from './LoginModal';
-
+/**
+ * Component for the employee list.
+ *
+ * @component
+ */
 function EmployeeList(props) {
     const [isLogged, setIsLogged] = useState(props.auth);
     const [loginModal, setLoginModal] = useState(false);
@@ -33,7 +37,12 @@ function EmployeeList(props) {
     const [isUpdating, setIsUpdating] = useState(false);
     const [updatedUser, setUpdatedUser] = useState({});
 
-
+/**
+ * <Takes in an array and split it into several arrays>
+ * @param   {array} arr <initial array>
+ * @param   {number} entries <sub array max length>
+ * @return  {array}        <array of arrays>
+ */
     const createGroups = (arr, entries) => {
         const pages = Math.ceil(arr.length / entries);
         //const perGroup = Math.ceil(arr.length / pages); // equal number of entries per pages. 
@@ -75,6 +84,12 @@ function EmployeeList(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [entriesSelected] );
 
+    /**
+ * <Sort array>
+ * @param   {string} name <The 'property' of the array you wish to sort>
+ * @param   {string} type <the type of sorting>
+ * @return  {array}        <sorted array>
+ */
     const sortArray = (name, type) => {
         if (type === 'ascending') {
             const sorted = [...fullArray].sort((a, b) => a[name] > b[name]);
@@ -93,7 +108,11 @@ function EmployeeList(props) {
             setEmployees(createGroups(sorted, entriesSelected));
         }
     }
-
+    /**
+ * <Search in array>
+ * @param   {string} string <The string you want to search>
+ * @return  {array}        <filtered array>
+ */
     const handleSearch = (e) => {
         setEmployees(createGroups(fullArray, entriesSelected))
         const arrayOfEmployees = fullArray;
@@ -138,7 +157,11 @@ function EmployeeList(props) {
             setEmployees(createGroups(fullArray, entriesSelected))
         }
     }
-
+    /**
+ * <Delete particular entry>
+ * @param   {string} id <The id of the element to delete>
+ * @param   {string} firstName <firstName>
+ */
     const handleDelete = (id, firstName) => {
         if (isLogged) {
             console.log(`Delete user with id: ${id}`);
@@ -152,13 +175,14 @@ function EmployeeList(props) {
             }
         } else {setMessageToLogin(true)}
     }
+
+    //// Handlers.
     const handleClick = (data) => {
         if (data) {
             setIsUpdating(false);
             fetchData();
         }
     }
-    
     const handleModalResponse = (data) => {
         if (data) {
             setIsVisibile(false);
@@ -177,7 +201,6 @@ function EmployeeList(props) {
             props.handleLogState(data);
         };
     }
-
     const handlePreviousPage = () => {
         let page = currentPage - 1;
         if (page < 1) page = 1;
